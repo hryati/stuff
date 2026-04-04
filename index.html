@@ -1,0 +1,477 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>My Collection</title>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400&family=DM+Serif+Display&display=swap" rel="stylesheet">
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg: #f5f3ee;
+      --text: #1a1a1a;
+      --muted: #888;
+      --border: rgba(0,0,0,0.08);
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'DM Mono', monospace;
+      min-height: 100vh;
+    }
+
+    /* ── HEADER ── */
+    header {
+      padding: 2.5rem 2.5rem 1.5rem;
+      border-bottom: 1px solid var(--border);
+    }
+    header h1 {
+      font-family: 'DM Serif Display', serif;
+      font-size: 2rem;
+      font-weight: 400;
+      letter-spacing: -0.02em;
+    }
+    header p {
+      font-size: 11px;
+      color: var(--muted);
+      letter-spacing: 0.08em;
+      margin-top: 4px;
+    }
+
+    /* ── SECTION ── */
+    .section {
+      padding: 2rem 2rem 2.5rem;
+      border-bottom: 1px solid var(--border);
+    }
+    .section-header {
+      display: flex;
+      align-items: baseline;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+    .section-header h2 {
+      font-family: 'DM Serif Display', serif;
+      font-size: 1.3rem;
+      font-weight: 400;
+      letter-spacing: -0.01em;
+    }
+    .section-header span {
+      font-size: 10px;
+      color: var(--muted);
+      letter-spacing: 0.08em;
+    }
+
+    .grid {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    .row {
+      display: flex;
+      flex-direction: row;
+      position: relative;
+      margin-left: -4px;
+    }
+
+    /* ══════════════════════════════════
+       VINYL
+    ══════════════════════════════════ */
+    .row-vinyl { height: 210px; }
+
+    .vinyl {
+      perspective: 500px;
+      width: 30px;
+      flex-shrink: 0;
+      transition: width 0.45s cubic-bezier(0.4,0,0.2,1);
+      position: relative;
+    }
+    .vinyl:hover { width: 155px; }
+
+    .vinyl img {
+      transition: transform 0.45s cubic-bezier(0.4,0,0.2,1),
+                  width 0.45s, height 0.45s, margin-top 0.45s, box-shadow 0.45s;
+      width: 185px;
+      height: 185px;
+      transform: rotateY(25deg);
+      transform-style: preserve-3d;
+      border-radius: 3px;
+      border: 1px solid rgba(0,0,0,0.12);
+      object-fit: cover;
+      display: block;
+    }
+    .vinyl:hover img {
+      transform: rotateY(8deg);
+      width: 192px;
+      height: 192px;
+      margin-top: -4px;
+      box-shadow: 6px 12px 32px rgba(0,0,0,0.18);
+    }
+
+    /* ══════════════════════════════════
+       BOOK / PAGE-TURN
+    ══════════════════════════════════ */
+    .row-book { height: 250px; }
+
+    .book {
+      width: 22px;
+      flex-shrink: 0;
+      position: relative;
+      transition: width 0.5s cubic-bezier(0.4,0,0.2,1);
+      perspective: 800px;
+    }
+    .book:hover { width: 170px; }
+
+    .book-inner {
+      position: relative;
+      width: 160px;
+      height: 228px;
+      transform-style: preserve-3d;
+    }
+
+    .book-back {
+      position: absolute;
+      inset: 0;
+      border-radius: 2px 5px 5px 2px;
+      background: #c8c3b8;
+      border: 1px solid rgba(0,0,0,0.15);
+      transform: rotateY(32deg);
+      transform-origin: left center;
+      transition: transform 0.5s cubic-bezier(0.4,0,0.2,1), box-shadow 0.5s;
+    }
+
+    .book-front {
+      position: absolute;
+      inset: 0;
+      border-radius: 2px 5px 5px 2px;
+      overflow: hidden;
+      transform: rotateY(32deg);
+      transform-origin: left center;
+      transform-style: preserve-3d;
+      transition: transform 0.5s cubic-bezier(0.4,0,0.2,1), box-shadow 0.5s;
+      border: 1px solid rgba(0,0,0,0.12);
+    }
+    .book-front img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    /* spine line */
+    .book-front::after {
+      content: '';
+      position: absolute;
+      top: 0; left: 14px;
+      width: 1px; height: 100%;
+      background: rgba(0,0,0,0.08);
+      pointer-events: none;
+    }
+
+    /* open on hover */
+    .book:hover .book-front {
+      transform: rotateY(-10deg);
+      box-shadow: 10px 16px 40px rgba(0,0,0,0.2);
+    }
+    .book:hover .book-back {
+      box-shadow: 2px 8px 16px rgba(0,0,0,0.1);
+    }
+
+    /* placeholder */
+    .book-placeholder {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      background: #e2ddd5;
+      gap: 8px;
+    }
+    .book-placeholder .ph-icon {
+      font-size: 26px;
+      opacity: 0.3;
+    }
+    .book-placeholder .ph-text {
+      font-size: 9px;
+      letter-spacing: 0.08em;
+      color: #999;
+      text-align: center;
+      padding: 0 10px;
+      line-height: 1.5;
+    }
+
+    /* ── shared label ── */
+    .item-label {
+      position: absolute;
+      bottom: -1.4rem;
+      left: 0;
+      font-size: 10px;
+      color: var(--muted);
+      letter-spacing: 0.04em;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 180px;
+      opacity: 0;
+      transition: opacity 0.2s;
+      pointer-events: none;
+    }
+    .vinyl:hover .item-label,
+    .book:hover .item-label { opacity: 1; }
+
+    footer {
+      padding: 2rem 2.5rem;
+      font-size: 11px;
+      color: var(--muted);
+      letter-spacing: 0.06em;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>My Collection</h1>
+  <p>records · movies · anime</p>
+</header>
+
+<!-- ── RECORDS ── -->
+<div class="section">
+  <div class="section-header">
+    <h2>Record Collection</h2>
+    <span id="count-records"></span>
+  </div>
+  <div class="grid" id="grid-records"></div>
+</div>
+
+<!-- ── MOVIES ── -->
+<div class="section">
+  <div class="section-header">
+    <h2>Movie Collection</h2>
+    <span id="count-movies"></span>
+  </div>
+  <div class="grid" id="grid-movies"></div>
+</div>
+
+<!-- ── ANIME ── -->
+<div class="section">
+  <div class="section-header">
+    <h2>Anime Collection</h2>
+    <span id="count-anime"></span>
+  </div>
+  <div class="grid" id="grid-anime"></div>
+</div>
+
+<footer>hover to preview &nbsp;·&nbsp; some of my favorites!</footer>
+
+<script>
+  /* ══════════════════════════════════════════════════════════════════
+     ADD YOUR ITEMS HERE
+     ─────────────────────────────────────────────────────────────────
+     Records : { src: "image url",  title: "Artist – Album" }
+     Movies  : { src: "poster url", title: "Movie Title" }   ← src: "" for placeholder
+     Anime   : { src: "poster url", title: "Anime Title" }   ← src: "" for placeholder
+  ══════════════════════════════════════════════════════════════════ */
+
+  const records = [
+    { src: "//e.snmc.io/i/300/w/3d66a82002366484f85bee8aafb0e1bd/13348930",  title: "Blur – Blur" },
+    { src: "//e.snmc.io/i/300/w/fbcdcc128a5a2494c6ac61133e40384f/13167053",  title: "Gorillaz – Demon Days" },
+    { src: "//e.snmc.io/i/300/w/b7af445c0f9fca822c8f275d30af4b31/7346711",   title: "Arctic Monkeys – WPSIATWIN" },
+    { src: "//e.snmc.io/i/300/w/d242ab53df7f714151ba071bde8fb1c6/12462942",  title: "Arctic Monkeys – Favourite Worst Nightmare" },
+    { src: "//e.snmc.io/i/300/w/17c7e049f7a7ed3d3f752785182cf879/7731175",   title: "Blur – 13" },
+    { src: "//e.snmc.io/i/300/w/f0d1318ad0bca95388013cfd5c1465cd/5973366",   title: "Blur – Modern Life is Rubbish" },
+    { src: "//e.snmc.io/i/300/w/8373d5ad7e6f15b2c1ef7d9cc767d4a1/8060277",   title: "Frank Ocean – Channel Orange" },
+    { src: "//e.snmc.io/i/300/w/151844023d9f305370a6a319a98551ea/8060362",   title: "Frank Ocean – Blonde" },
+    { src: "//e.snmc.io/i/300/w/8cd58011a22a3318386ebcaf689cac50/10166669",  title: "Frank Ocean – Nostalgia Ultra" },
+    { src: "//e.snmc.io/i/300/w/a21ffa9bd4d2cf5324248fb1c6260455/12114135",  title: "The Beach Boys – Smiley Smile" },
+    { src: "//e.snmc.io/i/300/w/9df985aa51ba61878d5a3e8d446ae940/8990667",   title: "The Beach Boys – The Smile Sessions" },
+    { src: "//e.snmc.io/i/300/w/7529cd7c2495c7c7dfe3d8f7324616b3/7212299",   title: "Playboi Carti – Die Lit" },
+    { src: "//e.snmc.io/i/300/w/75cb95464129f8c3354533f2e9f7fd53/8668858",   title: "Playboi Carti – Whole Lotta Red" },
+    { src: "//e.snmc.io/i/300/w/26717be8ee208ed7f89a23d27f2aa386/6911839",   title: "Taylor Swift – Reputation" },
+    { src: "//e.snmc.io/i/300/w/cf292a6438c5d33869af6f75a93d6640/2811410",   title: "Van Halen – Van Halen" },
+    { src: "//e.snmc.io/i/300/w/363067c8b22306724f7caf4e6b2d0868/12329408",  title: "Role Model – Kansas Anymore" },
+    { src: "//e.snmc.io/i/300/w/3b9430714c7e27dd2a6792132dd6a9d4/8879640",   title: "Radiohead – Amnesiac" },
+    { src: "//e.snmc.io/i/300/w/f68ad1b4502356a1964fb2445a8ffeb8/10835125",  title: "The Stone Roses – The Stone Roses" },
+    { src: "//e.snmc.io/i/300/w/d0fa52057b854ffd9875b6ee8829ca0d/2114809",   title: "Limp Bizkit – Significant Other" },
+    { src: "//e.snmc.io/i/300/s/8dc4635eaff110b37dd13a5608959a8e/3020337",   title: "Bob Dylan – New Morning" },
+    { src: "//e.snmc.io/i/300/w/397bfb3558f5ab3b4380d0816ab4b923/13702169",   title: "Peter McPoland – Big Lucky" },
+    { src: "//e.snmc.io/i/300/s/ae941902e4c7857b1fc61a78fa084138/12056415",   title: "The Smiths – The Queen Is Dead" },
+    { src: "//e.snmc.io/i/300/s/92c4a13f2cb88ff4b887dd461eeb306c/13926910",   title: "De La Soul – Cabin in the Sky" },
+    { src: "//e.snmc.io/i/300/s/e74005452542bee5bb56882021eb701b/8042478",   title: "100 gecs – 1000 gecs" },
+    { src: "//e.snmc.io/i/300/s/fad9717e9b97b2150f72d3e467de24f9/12097201",   title: "Sublime – Sublime" },
+    { src: "//e.snmc.io/i/300/s/4f43e948bdc51b50032b3027cbd0c995/6951656",   title: "Air – The Virgin Suicides(Original Motion Picture Score)" },
+    { src: "//e.snmc.io/i/300/s/d807fb3fd6930276e132f9857e229027/10871736",   title: "Mazzy Star – She Hangs Brightly" },
+    { src: "//e.snmc.io/i/300/s/d6728119aef5f1e866ec31c7be815270/14191308",   title: "The Velvet Underground, Nico – The Velvet Underground & Nico 45th Anniversary Edition" },
+    { src: "//e.snmc.io/i/300/s/a9cfdf55181f734f3de0511c59c9b20c/10003396",   title: "Post – Björk" },
+    { src: "//e.snmc.io/i/300/s/bc58207e554f43df6a62076d54285c50/7272164",   title: "The Cure – Disintegration" },
+    { src: "//e.snmc.io/i/300/s/3d1e470c773a86dba43f3cef1c2e3d40/11293598",   title: "The Cure – Three Imaginary Boys" },
+    { src: "//e.snmc.io/i/300/s/6e61d43dd9804cc768820f84718d7dff/5691887",   title: "Blur – The Magic Whip" },
+    { src: "//e.snmc.io/i/300/s/44abbd7f54e8e5bf30a4ac6e36eadd33/2700214",   title: "Queen – Sheer Heart Attack" },
+    { src: "//e.snmc.io/i/300/s/1c58a6afc99f4be140fc8f7acbee9622/2389482",   title: "Mother Mother – O My Heart" },
+    { src: "//e.snmc.io/i/300/s/05027a696e11215a5caca83fe10988cb/14043991",   title: "Radiohead – The Bends" },
+    { src: "//e.snmc.io/i/300/s/f8f4dc2a7fff8141ec6b262247522ced/10815106",   title: "Deftones – White Pony" },
+    { src: "//e.snmc.io/i/300/s/022331a69d2f694e387ae902b2cbcb39/10795080",   title: "JPEGMAFIA – Scaring the Hoes" },
+    { src: "//e.snmc.io/i/300/s/2d0926526e480f54ad8d6bbf01834366/13022658",   title: "Donald Byrd – Places and Spaces" },
+    { src: "//e.snmc.io/i/300/s/5559546990adee3749334a22147292ca/11077224",   title: "A$ap Rocky– At.Long.Last.A$AP" },
+    { src: "//e.snmc.io/i/300/s/918eb464e0568043deb06a5ede92875e/1547937",   title: "Graham Coxon – Love Travels at Illegal Speeds" },
+    
+
+  ];
+
+  const movies = [
+    { src: "https://a.ltrbxd.com/resized/film-poster/4/6/0/8/3/0/460830-portrait-of-a-lady-on-fire-0-1000-0-1500-crop.jpg?v=79b0f67aa9", title: "Portrait of a Lady on Fire" },
+    { src: "https://a.ltrbxd.com/resized/film-poster/1/4/9/8/5/7/149857-gone-girl-0-1000-0-1500-crop.jpg?v=dfe3c8018b", title: "Gone Girl" },
+    { src: "https://a.ltrbxd.com/resized/film-poster/8/7/7/2/5/3/877253-conclave-0-1000-0-1500-crop.jpg?v=f9cbf50dec", title: "Conclave" },
+    { src: "https://a.ltrbxd.com/resized/film-poster/7/2/9/1/1/3/729113-wake-up-dead-man-0-1000-0-1500-crop.jpg?v=85f3366617", title: "Wake Up Dead Man" },
+    { src: "https://a.ltrbxd.com/resized/film-poster/5/0/9/8/9/50989-imagine-me-you-0-1000-0-1500-crop.jpg?v=dd59ac719b", title: "Imagine Me & You" },
+    { src: "https://a.ltrbxd.com/resized/film-poster/6/2/2/4/1/3/622413-transformers-one-0-1000-0-1500-crop.jpg?v=b86bf0cdb6", title: "Transformers: One" },
+    { src: "https://a.ltrbxd.com/resized/sm/upload/x3/tw/wu/z4/vAkjFEm76Lu5hSevquxPgQ91OtI-0-1000-0-1500-crop.jpg?v=f4bfaf16df", title: "Hunger Games" },
+    { src: "https://a.ltrbxd.com/resized/sm/upload/1g/4f/6e/5b/prvWMj8cBFgVn5MLlsjlvH2hiIh-0-1000-0-1500-crop.jpg?v=edbe39cfb9", title: "Guardians of the Galaxy Vol. 2" },
+    { src: "https://a.ltrbxd.com/resized/film-poster/1/7/2/4/9/2/172492-x-men-apocalypse-0-1000-0-1500-crop.jpg?v=eecf0062df", title: "X-Men: Apocalypse" },
+    { src: "https://a.ltrbxd.com/resized/film-poster/5/1/9/3/2/51932-charlie-and-the-chocolate-factory-0-1000-0-1500-crop.jpg?v=cf68e10228", title: "Charlie and the Chocolate Factory" },
+    { src: "https://a.ltrbxd.com/resized/sm/upload/sv/dq/bd/hi/sliding-doors-poster-artwork-gwyneth-paltrow-john-hannah-john-lynch-0-1000-0-1500-crop.jpg?v=9133e889dc", title: "Sliding Doors" },
+    { src: "https://a.ltrbxd.com/resized/film-poster/1/9/1/8/2/2/191822-captain-underpants-the-first-epic-movie-0-1000-0-1500-crop.jpg?v=16cbcac7e0", title: "Captain Underpants: The First Epic Movie" },
+    { src: "https://a.ltrbxd.com/resized/sm/upload/39/3k/16/fo/8FRwaCoVePjPPPAPP0chHSweU8L-0-1000-0-1500-crop.jpg?v=bb81a7d14b", title: "Meet the Robinsons" },
+    { src: "https://a.ltrbxd.com/resized/film-poster/1/7/8/2/8/2/178282-pitch-perfect-2-0-1000-0-1500-crop.jpg?v=c4530d149e", title: "Pitch Perfect 2" },
+    { src: "https://a.ltrbxd.com/resized/sm/upload/y2/i8/9s/h1/tNr2KYytArZNSh0K8PUcHU3JnX4-0-1000-0-1500-crop.jpg?v=45f739a242", title: "The Witch" },
+    { src: "https://a.ltrbxd.com/resized/film-poster/5/1/9/8/9/51989-pirates-of-the-caribbean-dead-man-s-chest-0-1000-0-1500-crop.jpg?v=f9c46ae728", title: "Pirates of the Caribbean: Dead Man's Chest" },
+    { src: "https://a.ltrbxd.com/resized/film-poster/4/6/2/8/0/46280-the-iron-giant-0-1000-0-1500-crop.jpg?v=4684e40750", title: "The Iron Giant" },
+    { src: "https://a.ltrbxd.com/resized/film-poster/4/8/0/1/8/48018-speed-racer-0-1000-0-1500-crop.jpg?v=35fe09fa1e", title: "Speed Racer" },
+    { src: "https://a.ltrbxd.com/resized/film-poster/5/1/9/4/5/51945-back-to-the-future-0-1000-0-1500-crop.jpg?v=b818c8ce28", title: "Back to the Future" },
+    { src: "https://a.ltrbxd.com/resized/sm/upload/r4/np/q5/te/mSmiB8XjUnR1GSIljuCPGsk0cwX-0-1000-0-1500-crop.jpg?v=b3f603929c", title: "Little Women" },
+    { src: "https://a.ltrbxd.com/resized/film-poster/1/1/7/6/2/1/117621-interstellar-0-1000-0-1500-crop.jpg?v=7ad89e6666", title: "Interstellar" },
+    { src: "https://a.ltrbxd.com/resized/sm/upload/ye/jq/f3/22/nmb4QhCRmdfNP6rgb81yUFgI83l-0-1000-0-1500-crop.jpg?v=caa3999c6f", title: "Donnie Darko" },
+    { src: "https://a.ltrbxd.com/resized/film-poster/1/1/7/6/2/9/117629-pet-sematary-0-1000-0-1500-crop.jpg?v=e060f3b25d", title: "Pet Sematary" },
+    { src: "https://a.ltrbxd.com/resized/film-poster/8/1/6/0/5/81605-avengers-age-of-ultron-0-1000-0-1500-crop.jpg?v=d315efaff1", title: "Avengers: Age of Ultron" },
+    { src: "https://a.ltrbxd.com/resized/film-poster/2/2/6/6/6/1/226661-avengers-infinity-war-0-1000-0-1500-crop.jpg?v=8b35f60c0c", title: "Avengers: Infinity War" },
+    { src: "https://a.ltrbxd.com/resized/film-poster/7/8/8/4/5/0/788450-the-last-10-years-0-1000-0-1500-crop.jpg?v=19d98bab58", title: "The Last 10 Years" },
+    { src: "https://a.ltrbxd.com/resized/film-poster/5/1/5/4/2/51542-jaws-0-1000-0-1500-crop.jpg?v=03299455f6", title: "Jaws" },
+    { src: "https://a.ltrbxd.com/resized/film-poster/4/6/9/4/6/46946-she-s-the-man-0-1000-0-1500-crop.jpg?v=15a15f33fb", title: "She's the Man" },
+    { src: "https://a.ltrbxd.com/resized/sm/upload/a3/0q/kf/h8/jUFjMoLh8T2CWzHUSjKCojI5SHu-0-1000-0-1500-crop.jpg?v=6285ee260e", title: "Harry Potter and the Prisoner of Azkaban" },
+    { src: "https://a.ltrbxd.com/resized/sm/upload/10/vk/qc/6e/1NybAlflbmRXMIr9WoYxtlt1b6m-0-1000-0-1500-crop.jpg?v=ecf9142ef2", title: "Now you see Me" },
+    { src: "https://a.ltrbxd.com/resized/sm/upload/sq/uq/2f/zg/dnEZZ0ZIVIfSIPIYl7kqYktAZlm-0-1000-0-1500-crop.jpg?v=32aac0db78", title: "Rise of the Guardians" },
+    { src: "https://a.ltrbxd.com/resized/sm/upload/sv/95/s9/4j/inception-0-1000-0-1500-crop.jpg?v=30d7224316", title: "Inception" },
+    { src: "https://a.ltrbxd.com/resized/sm/upload/5b/qz/q0/l6/p2CcXx2AUllgwGis5jsffYQGE3F-0-1000-0-1500-crop.jpg?v=887640d802", title: "Movie 3" },
+    { src: "https://a.ltrbxd.com/resized/film-poster/2/5/1/9/4/3/251943-spider-man-into-the-spider-verse-0-1000-0-1500-crop.jpg?v=538fe0ada6", title: "Spider-Man: Into the Spider-Verse" },
+    { src: "https://a.ltrbxd.com/resized/film-poster/6/2/0/2/8/1/620281-mickey-17-0-1000-0-1500-crop.jpg?v=93e4d2af6d", title: "Mickey 17" },
+    { src: "https://a.ltrbxd.com/resized/film-poster/3/2/8/5/3/8/328538-the-florida-project-0-1000-0-1500-crop.jpg?v=60e095aa65", title: "The Florida Project" },
+    { src: "https://a.ltrbxd.com/resized/film-poster/2/6/1/8/6/6/261866-ready-player-one-0-1000-0-1500-crop.jpg?v=e84ba98da4", title: "Ready Player One" },
+    { src: "https://a.ltrbxd.com/resized/film-poster/1/1/8/4/6/1/118461-tomorrowland-0-1000-0-1500-crop.jpg?v=bb95f699cd", title: "Tomorrowland" },
+    { src: "https://a.ltrbxd.com/resized/film-poster/4/8/0/0/0/48000-idiocracy-0-1000-0-1500-crop.jpg?v=ce4d076f55", title: "Idiocracy" },
+    { src: "https://a.ltrbxd.com/resized/film-poster/4/3/2/7/2/43272-the-adventures-of-sharkboy-and-lavagirl-0-1000-0-1500-crop.jpg?v=1700030604", title: "The Adventures of Sharkboy and Lavagirl" },
+  ];
+
+  const anime = [
+    { src: "https://a.ltrbxd.com/resized/film-poster/1/1/9/2/2/9/0/1192290-demon-slayer-kimetsu-no-yaiba-infinity-castle-0-1000-0-1500-crop.jpg?v=186ff42e55", title: "Demon Slayer: Kimetsu no Yaiba" },
+    { src: "https://a.ltrbxd.com/resized/film-poster/1/1/2/7/6/6/9/1127669-look-back-0-1000-0-1500-crop.jpg?v=6a67407577", title: "Look Back" },
+    { src: "https://a.ltrbxd.com/resized/film-poster/9/1/1/9/6/6/911966-haikyu-the-dumpster-battle-0-1000-0-1500-crop.jpg?v=eb94163e7b", title: "Haikyu!!: The Dumpster Battle" },
+    { src: "https://a.ltrbxd.com/resized/film-poster/1/0/8/5/9/2/7/1085927-attack-on-titan-the-final-chapters-special-2-0-1000-0-1500-crop.jpg?v=3a979ef76c", title: "Attack on Titan: The Final Chapters Special 2" },
+    { src: "https://a.ltrbxd.com/resized/film-poster/1/0/0/7/3/3/9/1007339-the-summer-0-1000-0-1500-crop.jpg?v=4902246aae", title: "The Summer" },
+    { src: "https://a.ltrbxd.com/resized/film-poster/9/2/9/1/1/4/929114-doraemon-nobita-s-sky-utopia-0-1000-0-1500-crop.jpg?v=e81b51192b", title: "Doraemon: Nobita's Sky Utopia" },
+    { src: "https://a.ltrbxd.com/resized/film-poster/7/0/1/8/4/0/701840-sk8-the-infinity-0-1000-0-1500-crop.jpg?v=cbdca626", title: "SK8 the Infinity" },
+    { src: "https://a.ltrbxd.com/resized/film-poster/6/8/6/7/3/2/686732-jujutsu-kaisen-0-1000-0-1500-crop.jpg?v=267dd5fa93", title: "Jujutsu Kaisen" },
+    { src: "https://a.ltrbxd.com/resized/film-poster/5/5/8/8/1/0/558810-given-0-1000-0-1500-crop.jpg?v=006b419d89", title: "Given" },
+    { src: "https://a.ltrbxd.com/resized/film-poster/7/9/5/0/2/0/795020-the-disastrous-life-of-saiki-k-reawakened-0-1000-0-1500-crop.jpg?v=dc5cdd1e39", title: "The Disastrous Life of Saiki K.: Reawakened" },
+    { src: "https://a.ltrbxd.com/resized/film-poster/6/9/8/6/9/3/698693-persona-5-the-animation-proof-of-justice-0-1000-0-1500-crop.jpg?v=e36c52ae20", title: "Persona 5: The Animation" },
+    { src: "https://a.ltrbxd.com/resized/film-poster/6/1/3/6/8/0/613680-demon-slayer-kimetsu-no-yaiba-0-1000-0-1500-crop.jpg?v=9ad0504624", title: "Demon Slayer: Kimetsu no Yaiba" },
+    { src: "https://a.ltrbxd.com/resized/film-poster/4/0/6/1/9/6/406196-mirai-0-1000-0-1500-crop.jpg?v=48222abb01", title: "Mirai" },
+    { src: "https://a.ltrbxd.com/resized/film-poster/6/0/8/5/1/5/608515-erased-0-1000-0-1500-crop.jpg?v=6f4822bbe1", title: "Erased" },
+    { src: "https://a.ltrbxd.com/resized/film-poster/2/1/1/1/2/7/211127-doraemon-new-nobitas-great-demon-peko-and-the-exploration-0-1000-0-1500-crop.jpg?v=fd1865524b", title: "Doraemon: New Nobita's Great Demon Peko and the Exploration" },
+    { src: "https://a.ltrbxd.com/resized/film-poster/1/1/2/9/5/6/112956-the-tale-of-the-princess-kaguya-0-1000-0-1500-crop.jpg?v=2f4295660e", title: "The Tale of the Princess Kaguya" },
+    { src: "https://a.ltrbxd.com/resized/film-poster/1/5/4/8/3/8/154838-doraemon-nobitas-secret-gadget-museum-0-1000-0-1500-crop.jpg?v=a454e121b2", title: "Doraemon: Nobita's Secret Gadget Museum" },
+    { src: "https://a.ltrbxd.com/resized/film-poster/1/5/0/6/2/1/150621-hunter-x-hunter-phantom-rouge-0-1000-0-1500-crop.jpg?v=7ff2ea6c42", title: "Hunter x Hunter: Phantom Rouge" },
+    { src: "https://a.ltrbxd.com/resized/film-poster/5/9/0/0/8/5/590085-the-tatami-galaxy-0-1000-0-1500-crop.jpg?v=3b5aebf9f4", title: "The Tatami Galaxy" },
+    { src: "https://a.ltrbxd.com/resized/sm/upload/ba/5u/k5/he/arietty-0-1000-0-1500-crop.jpg?v=c291004a3a", title: "Arietty" },
+    { src: "https://a.ltrbxd.com/resized/film-poster/3/2/2/1/3/2/322132-jojo-s-bizarre-adventure-phantom-blood-0-1000-0-1500-crop.jpg?v=c3f6e3d075", title: "JoJo's Bizarre Adventure: Phantom Blood" },
+    { src: "https://a.ltrbxd.com/resized/film-poster/6/0/6/8/3/4/606834-death-note-2006-0-1000-0-1500-crop.jpg?v=5a5d43ebbc", title: "Death Note" },
+    { src: "https://a.ltrbxd.com/resized/film-poster/4/3/3/7/0/43370-the-girl-who-leapt-through-time-0-1000-0-1500-crop.jpg?v=d3c82f50ec", title: "The Girl Who Leapt Through Time" },
+    { src: "https://a.ltrbxd.com/resized/film-poster/6/5/3/1/2/3/653123-ouran-high-school-host-club-0-1000-0-1500-crop.jpg?v=71b9d33441", title: "Ouran High School Host Club" },
+    { src: "https://a.ltrbxd.com/resized/film-poster/6/3/4/1/0/9/634109-nana-0-1000-0-1500-crop.jpg?v=48de25eb2a", title: "Nana" },
+    { src: "https://a.ltrbxd.com/resized/film-poster/4/9/0/6/2/49062-howl-s-moving-castle-0-1000-0-1500-crop.jpg?v=fde81bda52", title: "Howl's Moving Castle" },
+    { src: "https://a.ltrbxd.com/resized/film-poster/6/0/8/9/3/2/608932-monster-0-1000-0-1500-crop.jpg?v=376d6e5ad5", title: "Monster" },
+    { src: "https://a.ltrbxd.com/resized/film-poster/8/3/9/7/5/6/839756-hunter-hunter-greed-island-0-1000-0-1500-crop.jpg?v=5ac1b3487b", title: "Hunter x Hunter: Greed Island" },
+    { src: "https://a.ltrbxd.com/resized/film-poster/5/1/9/2/1/51921-spirited-away-0-1000-0-1500-crop.jpg?v=a3ad463c55", title: "Spirited Away" },
+    { src: "https://a.ltrbxd.com/resized/film-poster/3/9/5/5/7/39557-one-piece-the-movie-0-1000-0-1500-crop.jpg?v=b5e4a4eec0", title: "One Piece: The Movie" },
+    { src: "https://a.ltrbxd.com/resized/film-poster/6/0/7/2/2/1/607221-cowboy-bebop-0-1000-0-1500-crop.jpg?v=06225f86b1", title: "Cowboy Bebop" },
+    { src: "https://a.ltrbxd.com/resized/film-poster/4/0/3/1/1/40311-neon-genesis-evangelion-the-end-of-evangelion-0-1000-0-1500-crop.jpg?v=3f8b0ad85b", title: "Neon Genesis Evangelion: The End of Evangelion" },
+    { src: "https://a.ltrbxd.com/resized/film-poster/4/4/5/5/8/44558-grave-of-the-fireflies-0-1000-0-1500-crop.jpg?v=0c61fd55f0", title: "Anime 3" },
+    { src: "https://a.ltrbxd.com/resized/film-poster/4/6/1/5/7/46157-castle-in-the-sky-0-1000-0-1500-crop.jpg?v=b1924d4dcd", title: "Castle in the Sky" },
+    { src: "https://a.ltrbxd.com/resized/film-poster/4/7/7/5/6/47756-my-neighbor-totoro-0-1000-0-1500-crop.jpg?v=749abe71ad", title: "My Neighbor Totoro" },
+    { src: "https://a.ltrbxd.com/resized/film-poster/1/2/6/3/5/6/9/1263569-jojos-bizarre-adventure-stardust-crusaders-0-1000-0-1500-crop.jpg?v=cbe3ea5c8a", title: "JoJo's Bizarre Adventure: Stardust Crusaders" },
+    { src: "https://a.ltrbxd.com/resized/film-poster/3/0/6/2/5/8/306258-one-punch-man-road-to-hero-0-1000-0-1500-crop.jpg?v=57533618e5", title: "One Punch Man: Road to Hero" },
+    { src: "https://a.ltrbxd.com/resized/film-poster/6/0/7/0/8/1/607081-fullmetal-alchemist-brotherhood-0-1000-0-1500-crop.jpg?v=6bc7e72880", title: "Fullmetal Alchemist: Brotherhood" },
+    { src: "https://a.ltrbxd.com/resized/film-poster/3/5/4/1/7/3/354173-bleach-0-1000-0-1500-crop.jpg?v=11494c14c7", title: "Bleach" },
+    { src: "https://a.ltrbxd.com/resized/film-poster/4/9/0/2/3/49023-paprika-0-1000-0-1500-crop.jpg?v=bdcabb9981", title: "Paprika" },
+  ];
+
+  /* ── layout constants — keep in sync with CSS ── */
+  const VINYL_W     = 30;
+  const BOOK_W      = 22;
+  const ROW_PADDING = 64;
+
+  function buildVinylRow(chunk) {
+    const row = document.createElement('div');
+    row.className = 'row row-vinyl';
+    chunk.forEach(v => {
+      const div = document.createElement('div');
+      div.className = 'vinyl';
+      div.innerHTML = `<img src="${v.src}" alt="${v.title}" loading="lazy">
+                       <span class="item-label">${v.title}</span>`;
+      row.appendChild(div);
+    });
+    return row;
+  }
+
+  function buildBookRow(chunk) {
+    const row = document.createElement('div');
+    row.className = 'row row-book';
+    chunk.forEach(v => {
+      const div = document.createElement('div');
+      div.className = 'book';
+      const coverHTML = v.src
+        ? `<img src="${v.src}" alt="${v.title}" loading="lazy">`
+        : `<div class="book-placeholder">
+             <span class="ph-icon">&#9647;</span>
+             <span class="ph-text">${v.title}</span>
+           </div>`;
+      div.innerHTML = `
+        <div class="book-inner">
+          <div class="book-back"></div>
+          <div class="book-front">${coverHTML}</div>
+        </div>
+        <span class="item-label">${v.title}</span>`;
+      row.appendChild(div);
+    });
+    return row;
+  }
+
+  function buildGrid(items, gridId, countId, type) {
+    const grid      = document.getElementById(gridId);
+    const countEl   = document.getElementById(countId);
+    const itemW     = type === 'vinyl' ? VINYL_W : BOOK_W;
+    const available = window.innerWidth - ROW_PADDING;
+    const perRow    = Math.max(1, Math.floor(available / itemW));
+
+    grid.innerHTML = '';
+    countEl.textContent = items.length + ' items';
+
+    for (let i = 0; i < items.length; i += perRow) {
+      const chunk = items.slice(i, i + perRow);
+      const row   = type === 'vinyl' ? buildVinylRow(chunk) : buildBookRow(chunk);
+      grid.appendChild(row);
+    }
+  }
+
+  function buildAll() {
+    buildGrid(records, 'grid-records', 'count-records', 'vinyl');
+    buildGrid(movies,  'grid-movies',  'count-movies',  'book');
+    buildGrid(anime,   'grid-anime',   'count-anime',   'book');
+  }
+
+  buildAll();
+  window.addEventListener('resize', buildAll);
+</script>
+</body>
+</html>
