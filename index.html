@@ -472,6 +472,27 @@
 
   buildAll();
   window.addEventListener('resize', buildAll);
+
+  // ── VISITOR COUNTER (secret: press Alt + V to reveal) ──
+const visits = parseInt(localStorage.getItem('visits') || '0') + 1;
+localStorage.setItem('visits', visits);
+
+const counter = document.createElement('div');
+counter.style.cssText = `
+  display:none; position:fixed; bottom:1.5rem; right:1.5rem;
+  background:#1a1a1a; color:#f5f3ee; font-family:'DM Mono',monospace;
+  font-size:11px; letter-spacing:0.08em; padding:10px 16px;
+  border-radius:4px; z-index:999; box-shadow:0 4px 20px rgba(0,0,0,0.2);
+`;
+counter.textContent = `👁 ${visits} visit${visits !== 1 ? 's' : ''}`;
+document.body.appendChild(counter);
+
+document.addEventListener('keydown', e => {
+  if (e.altKey && e.key === 'v') {
+    counter.style.display = counter.style.display === 'none' ? 'block' : 'none';
+  }
+});
+  
 </script>
 </body>
 </html>
