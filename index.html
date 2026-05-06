@@ -4,7 +4,6 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>My Collection</title>
-  <link href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400&family=DM+Serif+Display&display=swap" rel="stylesheet">
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
@@ -18,7 +17,8 @@
     body {
       background: var(--bg);
       color: var(--text);
-      font-family: 'DM Mono', monospace;
+      font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+      font-weight: 700;
       min-height: 100vh;
     }
 
@@ -28,9 +28,9 @@
       border-bottom: 1px solid var(--border);
     }
     header h1 {
-      font-family: 'DM Serif Display', serif;
+      font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+      font-weight: 700;
       font-size: 2rem;
-      font-weight: 400;
       letter-spacing: -0.02em;
     }
     header p {
@@ -52,9 +52,9 @@
       margin-bottom: 1.5rem;
     }
     .section-header h2 {
-      font-family: 'DM Serif Display', serif;
+      font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+      font-weight: 700;
       font-size: 1.3rem;
-      font-weight: 400;
       letter-spacing: -0.01em;
     }
     .section-header span {
@@ -267,14 +267,6 @@
 <footer>hover to preview &nbsp;·&nbsp; some of my favorites!</footer>
 
 <script>
-  /* ══════════════════════════════════════════════════════════════════
-     ADD YOUR ITEMS HERE
-     ─────────────────────────────────────────────────────────────────
-     Records : { src: "image url",  title: "Artist – Album" }
-     Movies  : { src: "poster url", title: "Movie Title" }   ← src: "" for placeholder
-     Anime   : { src: "poster url", title: "Anime Title" }   ← src: "" for placeholder
-  ══════════════════════════════════════════════════════════════════ */
-
   const records = [
     { src: "//e.snmc.io/i/300/w/3d66a82002366484f85bee8aafb0e1bd/13348930",  title: "Blur – Blur" },
     { src: "//e.snmc.io/i/300/w/fbcdcc128a5a2494c6ac61133e40384f/13167053",  title: "Gorillaz – Demon Days" },
@@ -316,8 +308,6 @@
     { src: "//e.snmc.io/i/300/s/2d0926526e480f54ad8d6bbf01834366/13022658",   title: "Donald Byrd – Places and Spaces" },
     { src: "//e.snmc.io/i/300/s/5559546990adee3749334a22147292ca/11077224",   title: "A$ap Rocky– At.Long.Last.A$AP" },
     { src: "//e.snmc.io/i/300/s/918eb464e0568043deb06a5ede92875e/1547937",   title: "Graham Coxon – Love Travels at Illegal Speeds" },
-    
-
   ];
 
   const movies = [
@@ -473,28 +463,25 @@
   buildAll();
   window.addEventListener('resize', buildAll);
 
- 
-const visits = parseInt(localStorage.getItem('visits') || '0') + 1;
-localStorage.setItem('visits', visits);
+  const visits = parseInt(localStorage.getItem('visits') || '0') + 1;
+  localStorage.setItem('visits', visits);
 
-const counter = document.createElement('div');
-counter.style.cssText = `
-  display:none; position:fixed; bottom:1.5rem; right:1.5rem;
-  background:#1a1a1a; color:#f5f3ee; font-family:'DM Mono',monospace;
-  font-size:11px; letter-spacing:0.08em; padding:10px 16px;
-  border-radius:4px; z-index:999; box-shadow:0 4px 20px rgba(0,0,0,0.2);
-`;
-counter.textContent = `👁 ${visits} visit${visits !== 1 ? 's' : ''}`;
-document.body.appendChild(counter);
+  const counter = document.createElement('div');
+  counter.style.cssText = `
+    display:none; position:fixed; bottom:1.5rem; right:1.5rem;
+    background:#1a1a1a; color:#f5f3ee;
+    font-family:'Helvetica Neue',Helvetica,Arial,sans-serif; font-weight:700;
+    font-size:11px; letter-spacing:0.08em; padding:10px 16px;
+    border-radius:4px; z-index:999; box-shadow:0 4px 20px rgba(0,0,0,0.2);
+  `;
+  counter.textContent = `👁 ${visits} visit${visits !== 1 ? 's' : ''}`;
+  document.body.appendChild(counter);
 
-document.addEventListener('keydown', e => {
-  if (e.altKey && e.key === 'v') {
-    counter.style.display = counter.style.display === 'none' ? 'block' : 'none';
-  }
-});
-
-  
-  
+  document.addEventListener('keydown', e => {
+    if (e.altKey && e.key === 'v') {
+      counter.style.display = counter.style.display === 'none' ? 'block' : 'none';
+    }
+  });
 </script>
 </body>
 </html>
